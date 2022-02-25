@@ -4,7 +4,7 @@
 /*
 author: plapacz1@gmail.com; date: 2020-02-22 ;version: 0.1
 */
-
+#include "model_of_expresson.h"
 
 type_of_value_t read_a(argument_t *pa, char *formula, int indent);
 type_of_value_t read_e(expression1_t *pe, char* formula,  int indent);

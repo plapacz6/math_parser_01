@@ -19,7 +19,7 @@ author: plapacz1@gmail.com; date: 2021-02-16 ;version: 0.1
 //  type_of_value_t (*pf)(argument_t** tbl_args, int n_of_args);
 //} function_db_t;
 //#define FUNCTION_DB_SIZE (8)
-extern function_db_t function_db [FUNCTION_DB_SIZE] = {
+function_db_t function_db [FUNCTION_DB_SIZE] = {
   {"sum", 2, sum2},
   {"sum", 3, sum3},
   {"sum", 4, sum4},

@@ -97,7 +97,7 @@ void s_arg(type_of_token_t t){
   pst->curr_arg->token_type = t;
 }
 
-void o_al(level){
+void o_al(int level){
 /*
    !!! level is incremented (if neccecary) outside (before call) this function
 */
