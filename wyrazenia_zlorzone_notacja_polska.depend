@@ -1,0 +1,130 @@
+# depslib dependency file v1.0
+1613994209 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/main.c
+	<stdio.h>
+	<stdlib.h>
+	"model_of_expresson.h"
+	"parse_expr_04.h"
+	"parser_debug.h"
+	"read_and_calculate.h"
+	"semantic_processor_01.h"
+
+1601111696 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/math2polnot.c
+	"math2polnot.h"
+
+1601111699 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/math2polnot.h
+
+1613541627 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/complex_expression.c
+	"complex_expression.h"
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<stdbool.h>
+	<assert.h>
+	<stdlib.h>
+	<stdio.h>
+
+1613541675 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/complex_expression.h
+
+1613990076 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/read_and_calculate.c
+	<stdlib.h>
+	<stdio.h>
+	<assert.h>
+	<string.h>
+	"model_of_expresson.h"
+	"read_and_calculate.h"
+
+1613541627 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_01.h
+	"complex_expression.h"
+
+1612350856 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_02.h
+	"complex_expression.h"
+
+1613541675 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_01.c
+	<stdlib.h>
+	<stdbool.h>
+	<assert.h>
+	<stdio.h>
+	<string.h>
+	"parse_expr_01.h"
+	"parser_debug.h"
+
+1613541627 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parser_debug.h
+	"model_of_expresson.h"
+	<stdio.h>
+	<stdio.h>
+	<stdio.h>
+	<stdio.h>
+
+1613541675 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_02.c
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	"parse_expr_02.h"
+	"complex_expression.h"
+	"parser_debug.h"
+
+1613983903 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parser_debug.c
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	"model_of_expresson.h"
+	"parser_debug.h"
+
+1612350872 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_03.h
+	"complex_expression.h"
+
+1613541675 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_03.c
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	<assert.h>
+	"complex_expression.h"
+	"parse_expr_03.h"
+	"parser_debug.h"
+
+1613984204 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/model_of_expresson.h
+
+1612350149 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_04.h
+	"model_of_expresson.h"
+
+1613559337 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/model_of_expression.c
+	"model_of_expresson.h"
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	<stdbool.h>
+	<assert.h>
+	<stdlib.h>
+	<stdio.h>
+
+1613633653 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/parse_expr_04.c
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	<assert.h>
+	"model_of_expresson.h"
+	"parse_expr_04.h"
+	"parser_debug.h"
+	"semantic_processor_01.h"
+
+1613994228 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/semantic_processor_01.h
+	"semantic_processor_01.h"
+	"model_of_expresson.h"
+
+1613637606 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/math_function_def_01.c
+	<math.h>
+	"math_function_def_01.h"
+
+1613637532 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/math_function_def_01.h
+	"model_of_expresson.h"
+
+1613994167 source:/home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/semantic_processor_01.c
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	"semantic_processor_01.h"
+	"model_of_expresson.h"
+	"math_function_def_01.h"
+
+1613989803 /home/pawel/d/code/projekty/wyrazenia_zlorzone_notacja_polska/read_and_calculate.h
+
