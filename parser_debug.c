@@ -1,5 +1,5 @@
 /*
-author: plapacz1@gmail.com; date:  2020-09-22 ;version: 0.1
+author: plapacz6@gmail.com; date:  2020-09-22 ;version: 0.1
 */
 #include <stdlib.h>
 #include <stdbool.h>

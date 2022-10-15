@@ -1,6 +1,6 @@
 #ifdef MODEL_OF_EXPRESSON_2
 /*
-author: plapacz1@gmail.com; date: 2020- ;version: 0.1
+author: plapacz6@gmail.com; date: 2020- ;version: 0.1
 */
 #include <stdlib.h>
 #include <stdbool.h>

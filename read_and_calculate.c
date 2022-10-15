@@ -1,4 +1,4 @@
-/* author: plapacz1@gmail.com; date: 2020-10-04 ;version: 0.1 */
+/* author: plapacz6@gmail.com; date: 2020-10-04 ;version: 0.1 */
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -57,6 +57,8 @@ static void make_indent(char *s, int indent){
   s[i] = 0;
 }
 
+
+
 type_of_value_t read_a(argument_t *pa, char *formula, int indent){
   char s[INDENT_MAX];
   type_of_value_t val;
@@ -72,6 +74,16 @@ type_of_value_t read_a(argument_t *pa, char *formula, int indent){
   return val;
 }
 
+
+
+/**
+ * @brief 
+ * 
+ * @param pe        - pointer to expression struct
+ * @param formula   - analyzed formula
+ * @param indent    - indentation of the message printout
+ * @return type_of_value_t   - calculated value of formula
+ */
 type_of_value_t read_e(expression1_t *pe, char* formula,  int indent){
   char s[INDENT_MAX];
   char n[INDENT_MAX];
@@ -91,11 +103,13 @@ type_of_value_t read_e(expression1_t *pe, char* formula,  int indent){
   return pe->pIasArg->val;
 }
 
+
+
 void read_la(list_of_arguments_t *pla, char* formula, int indent, argument_t** tbl_args, int n_of_args){
   int i = 0;
   list_of_arguments_rewind(pla);
   do {
-    assert(i<n_of_args);
+    assert(i < n_of_args);
     if(list_of_arguments_get(pla) != NULL){
       tbl_args[i] = list_of_arguments_get(pla);
       read_a(list_of_arguments_get(pla), formula, indent);

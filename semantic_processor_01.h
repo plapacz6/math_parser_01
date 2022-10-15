@@ -1,7 +1,7 @@
 #ifndef SEMANTIC_PROCESSOR_01_H_INCLUDED
 #define SEMANTIC_PROCESSOR_01_H_INCLUDED
 /*
-author: plapacz1@gmail.com; date: 2021-02-16 ;version: 0.1
+author: plapacz6@gmail.com; date: 2021-02-16 ;version: 0.1
 */
 #include "semantic_processor_01.h"
 #include "model_of_expresson.h"

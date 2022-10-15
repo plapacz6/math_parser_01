@@ -3,7 +3,7 @@
 #define PARSE_EXPR_02_H_INCLUDED
 
 /*
-author: plapacz1@gmail.com; date: 2020-11-03 ;version: 0.1
+author: plapacz6@gmail.com; date: 2020-11-03 ;version: 0.1
 */
 #include "complex_expression.h"
 

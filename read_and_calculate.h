@@ -2,7 +2,7 @@
 #define READ_AND_CALCULATE_H_INCLUDED
 
 /*
-author: plapacz1@gmail.com; date: 2020-02-22 ;version: 0.1
+author: plapacz6@gmail.com; date: 2020-02-22 ;version: 0.1
 */
 #include "model_of_expresson.h"
 

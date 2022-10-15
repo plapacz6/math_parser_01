@@ -8,51 +8,99 @@
 #include "read_and_calculate.h"
 #include "semantic_processor_01.h"
 
+#include "tests_db.h"
+
+#define TEST_AUTO_ON
 
 
-char* expression_test = "sum(mul( -1,sum(2 ,3.98)), sum(4 ,sum(5,6) ))";  //string of expression in polish notation
-char * expression_test_math = "((-1 * (2 + 3.98)) + (4 + (5 + 6)))";  //odpowiedbnik
+#define CLI_ARG_BUFF_SIZE (999)
+typedef enum auto_test_switch_tt{
+  AUTO_TEST_OFF,
+  AUTO_TEST_ON,
+} auto_test_switch_t;
 
-char* expression_error1 = "4 sum(sum4(-1,sum(23 4 ,3)), 5sum(4 ,sum(5,6) ))";  //wrong string of expression in polish notation
 
 int main(int argc, char** argv)
 {
+  auto_test_switch_t test = AUTO_TEST_OFF;
   char bufor[1000];
   char *formula;
   char *formula_math;
   int i;
+
     if(argc > 1) {
-      printf("formula musi byc w postaci: \n%s\n", expression_test);
+      printf("formula must be in form: \n%s\n", expression_test);
       for(i = 0; i < FUNCTION_DB_SIZE; i++) {
         printf("%s\n", function_db[i].name);
       }
       puts(":\n");
-      fgets(bufor, 999, stdin);
+      fgets(bufor, CLI_ARG_BUFF_SIZE, stdin);
       formula = bufor;
       formula_math = "";
     }
     else {
-      formula = expression_test;
-      formula_math = expression_test_math;
+      #ifdef TEST_AUTO_ON
+      test = AUTO_TEST_ON;    
+      #elif
+      test = AUTO_TEST_OFF;    
+      #endif
     }
+
+
     type_of_value_t val;
     //expression1_t *pexpr = expression_read(expression_test);
-    expression1_t *pexpr = parse_expr4(formula);
-    //expression_read(expression_error1);
-    //printf("Hello world! %p\n", pexpr);
-    puts("---------------------");
-    display_e(pexpr, 0);
+        
+    if(test == AUTO_TEST_OFF){
+      formula = expression_test;
+      formula_math = expression_test_math;
 
-    val = read_e(pexpr, expression_test, 0);
-    printf("wartosc == %f\n", val);
+      
+      expression1_t *pexpr = parse_expr4(formula);
 
-    puts("---------------------");
-    printf("%s\n", "TO BYLO OBLICZANIE:");
-    printf("%s\n", "notacja polska:");
-    printf("%s\n", formula);
-    printf("%s\n", "zapis tradycyjny:");
-    printf("%s\n", formula_math);
-    puts("---------------------");
+      
+      //expression_read(expression_error1);
+      //printf("Hello world! %p\n", pexpr);
+      puts("---------------------");
+      display_e(pexpr, 0);
 
+      val = read_e(pexpr, expression_test, 0);
+      printf("wartosc == %f\n", val);
+
+      puts("---------------------");
+      printf("%s\n", "TO BYLO OBLICZANIE:");
+      printf("%s\n", "notacja polska:");
+      printf("%s\n", formula);
+      printf("%s\n", "zapis tradycyjny:");
+      printf("%s\n", formula_math);
+      puts("---------------------");
+    }
+    else {  //AUTO_TEST_ON
+      
+      int j = 0;
+      for(j = 0; j < tests_number; j++){
+      
+        
+        expression1_t *pexpr = parse_expr4(test_expr[j].f);
+        val = read_e(pexpr, test_expr[j].a, 0);
+
+        test_result.count++;
+        if( val == test_expr[j].val) {
+          test_result.pass++;
+        }
+        else{
+          test_result.fail++;
+          printf("%s:\n","TEST FAIL");
+          printf("formula:\n%s\n", test_expr[j].f);
+          printf("algebraic:\n%s\n", test_expr[j].a);          
+          printf("value:\n%f\n", (double)val);          
+        }
+        
+
+      }
+      printf("test pass: %i\n", test_result.pass);
+      printf("test fail: %i\n", test_result.fail);
+      printf("%s\n", "");
+    }    
+     
     return 0;
 }

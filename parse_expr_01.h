@@ -2,7 +2,7 @@
 #ifndef PARSE_EXPR_01_H_INCLUDED
 #define PARSE_EXPR_01_H_INCLUDED
 /*
-author: plapacz1@gmail.com; date:  2020-09-22 ;version: 0.1
+author: plapacz6@gmail.com; date:  2020-09-22 ;version: 0.1
 */
 #include "complex_expression.h"
 

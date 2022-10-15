@@ -1,5 +1,5 @@
 /*
-author: plapacz1@gmail.com; date: 2021-02-16 ;version: 0.1
+author: plapacz6@gmail.com; date: 2021-02-16 ;version: 0.1
 */
 #include <stdlib.h>
 #include <string.h>
@@ -30,6 +30,12 @@ function_db_t function_db [FUNCTION_DB_SIZE] = {
   {"sqrt", 2, sqrt2}
 };
 
+/**
+ * @brief fill in valu of number
+ * 
+ * @param parg 
+ * @param formula 
+ */
 void interpret_num(argument_t *parg, char *formula){
   double value_d = 0;
   char buf[MAX_SIZE_OF_DIGIT + 1];
@@ -40,6 +46,13 @@ void interpret_num(argument_t *parg, char *formula){
 
   parg->val = (type_of_value_t)value_d;
 }
+
+/**
+ * @brief find and fill in pointer to function which perform operation asociatted with operator
+ * 
+ * @param pex 
+ * @param formula 
+ */
 void interpret_op(expression1_t *pex, char* formula){
   char buf[MAX_SIZE_OF_DIGIT + 1];
   strncpy(buf, formula + (pex->i_start), pex->i_end - pex->i_start);

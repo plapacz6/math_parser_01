@@ -2,7 +2,7 @@
 #ifndef COMPLEX_EXPRESSION_H_INCLUDED
 #define COMPLEX_EXPRESSION_H_INCLUDED
 
-/* author: plapacz1@gmail.com; date: 2020-09-22 ;version: 0.1 */
+/* author: plapacz6@gmail.com; date: 2020-09-22 ;version: 0.1 */
 /** @file complex_expression.h */
 extern char* expression;  //string of expression
 

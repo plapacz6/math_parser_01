@@ -2,7 +2,7 @@
 #define MATH_FUNCTION_DEF_01_H_INCLUDED
 
 /*
-author: plapacz1@gmail.com; date: 2020- ;version: 0.1
+author: plapacz6@gmail.com; date: 2020- ;version: 0.1
 */
 #include "model_of_expresson.h"
 

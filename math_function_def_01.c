@@ -1,7 +1,7 @@
 #include <math.h>
 #include "math_function_def_01.h"
 /*
-author: plapacz1@gmail.com; date: 2020- ;version: 0.1
+author: plapacz6@gmail.com; date: 2020- ;version: 0.1
 */
 type_of_value_t sum2(argument_t** tbl_args, int n_of_args){
   type_of_value_t value = 0;

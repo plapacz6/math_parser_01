@@ -1,7 +1,7 @@
 #ifndef PARSER_DEBUG_H_INCLUDED
 #define PARSER_DEBUG_H_INCLUDED
 /*
-author: plapacz1@gmail.com; date:  2020-09-22 ;version: 0.1
+author: plapacz6@gmail.com; date:  2020-09-22 ;version: 0.1
 */
 #include "model_of_expresson.h"
 #ifdef DEBUG_

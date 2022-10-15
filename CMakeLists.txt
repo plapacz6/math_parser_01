@@ -14,7 +14,9 @@ add_executable(math_parser /
   parse_expr_04.c /
   parser_debug.c /
   read_and_calculate.c /
-  semantic_processor_01.c)
+  semantic_processor_01.c /
+  tests_db.c /
+  )
 
   #parse_expr_01.c  #parse_expr_02.c #parse_expr_03.c \
 
