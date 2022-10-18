@@ -58,13 +58,24 @@ static void make_indent(char *s, int indent){
 }
 
 
-
+/**
+ * @brief read value of argument (in recursive way)
+ * 
+ * @param pa 
+ * @param formula 
+ * @param indent  - for print debug info
+ * @return type_of_value_t 
+ */
 type_of_value_t read_a(argument_t *pa, char *formula, int indent){
-  char s[INDENT_MAX];
   type_of_value_t val;
+
+  #ifdef DEBUG_PRINT_READ
+  char s[INDENT_MAX];  
   make_indent(s, indent);
   printf("%slevel: %i, val: %f\n",s, pa->level, pa->val);
   printf("%s_____________________A|\n", s);
+  #endif // DEBUG_PRINT_READ
+
   if(pa->calc != NULL) {
     val = read_e(pa->calc, formula, indent + 1);
   }
@@ -77,45 +88,64 @@ type_of_value_t read_a(argument_t *pa, char *formula, int indent){
 
 
 /**
- * @brief 
+ * @brief  calculate value of arguemnt being complex expression
+ * during that alocates memory for value orgument of function realizes operation
+ * and release that memory after calculations
  * 
  * @param pe        - pointer to expression struct
  * @param formula   - analyzed formula
- * @param indent    - indentation of the message printout
+ * @param indent    - indentation of the message printout (debug info)
  * @return type_of_value_t   - calculated value of formula
  */
 type_of_value_t read_e(expression1_t *pe, char* formula,  int indent){
-  char s[INDENT_MAX];
-  char n[INDENT_MAX];
-  strncpy(n, formula + (pe->i_start), pe->i_end - pe->i_start);
-  n[pe->i_end - pe->i_start] = 0;
-  make_indent(s, indent);
 
-  //printf("%spIasArg->level: %i  %s\n", s, pe->pIasArg->level, n);
+  #ifdef DEBUG_PRINT_READ
+    char s[INDENT_MAX];
+    char n[INDENT_MAX];
+    strncpy(n, formula + (pe->i_start), pe->i_end - pe->i_start);
+    n[pe->i_end - pe->i_start] = 0;
+    make_indent(s, indent);
+    //printf("%spIasArg->level: %i  %s\n", s, pe->pIasArg->level, n);
+  #endif // DEBUG_PRINT_READ
+
   if(pe->plarg != NULL) {
-    argument_t** tbl_args = malloc(sizeof(argument_t*) * pe->n_of_args);
+    argument_t** tbl_args = malloc(sizeof(argument_t*) * pe->n_of_args); //pe->n_of_args is generated in perse_express4()  //TODO: IT SHOUD BE IN ONE PLACE ONLY FOR EXPAMPLE IN pe->la REDUNDANCY INTORUCES ERROS
     if(tbl_args == NULL) exit(1);
     read_la(pe->plarg, formula, indent + 1, tbl_args, pe->n_of_args);
     pe->pIasArg->val = (pe->fn)(tbl_args, pe->n_of_args);
     free(tbl_args);
   }
-  printf("%spIasArg->level: %i  %s == %f\n", s, pe->pIasArg->level, n, (double) (pe->pIasArg->val));
+  
+  #ifdef DEBUG_PRINT_READ
+    printf("%spIasArg->level: %i  %s == %f\n", s, pe->pIasArg->level, n, (double) (pe->pIasArg->val));
+  #endif // DEBUG_PRINT_READ
+
   return pe->pIasArg->val;
 }
 
 
-
+/**
+ * @brief  reads values of argument being on list of arguments 
+ * (in recursive way (by read_a() function) ia any of arguments is complex expression)
+ * 
+ * @param pla 
+ * @param formula 
+ * @param indent    - for print debug info 
+ * @param tbl_args 
+ * @param n_of_args 
+ */
 void read_la(list_of_arguments_t *pla, char* formula, int indent, argument_t** tbl_args, int n_of_args){
   int i = 0;
   list_of_arguments_rewind(pla);
   do {
-    assert(i < n_of_args);
+    assert(i < n_of_args);    //na_of_arg is generated in perse_express4()
     if(list_of_arguments_get(pla) != NULL){
       tbl_args[i] = list_of_arguments_get(pla);
       read_a(list_of_arguments_get(pla), formula, indent);
       i++;
     }
-    else return;
+    else 
+      return;
   } while(list_of_arguments_next(pla) == 0);  //0 - still there are arguments
   return;
 }

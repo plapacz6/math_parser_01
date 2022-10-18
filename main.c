@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     else {
       #ifdef TEST_AUTO_ON
       test = AUTO_TEST_ON;    
-      #elif
+      #else
       test = AUTO_TEST_OFF;    
       #endif
     }
@@ -77,8 +77,9 @@ int main(int argc, char** argv)
     else {  //AUTO_TEST_ON
       
       int j = 0;
-      for(j = 0; j < tests_number; j++){
+      for(; j < tests_number; j++){
       
+        printf("%s : %d\n", "TEST", j);
         
         expression1_t *pexpr = parse_expr4(test_expr[j].f);
         val = read_e(pexpr, test_expr[j].a, 0);
@@ -97,8 +98,8 @@ int main(int argc, char** argv)
         
 
       }
-      printf("test pass: %i\n", test_result.pass);
-      printf("test fail: %i\n", test_result.fail);
+      printf("test pass: %d\n", test_result.pass);
+      printf("test fail: %d\n", test_result.fail);
       printf("%s\n", "");
     }    
      

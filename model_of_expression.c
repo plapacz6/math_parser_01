@@ -3,7 +3,7 @@ author: plapacz6@gmail.com; date: 2021-02-03 ;version: 0.1
 */
 /* author: plapacz6@gmail.com; date: 2020-09-22 ;version: 0.1 */
 
-#include "model_of_expresson.h"
+
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
@@ -11,6 +11,8 @@ author: plapacz6@gmail.com; date: 2021-02-03 ;version: 0.1
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "model_of_expresson.h"
+#include "error_handling.h"
 
 #ifdef DEBUG_LEVEL
 list_of_arguments_t *list_of_arguments_create(int level){
@@ -19,23 +21,27 @@ list_of_arguments_t *list_of_arguments_create(void){
 #endif // DEBUG_LEVEL
 
   list_of_arguments_t *pla = malloc(sizeof(list_of_arguments_t));
-  if(pla != NULL) {
-    pla->first = NULL;
-    pla->curr = pla->first;
-    pla->last = pla->first;
-  }
+  if(pla == NULL) PERROR_MALLOC("list_of_argumetns_create()  - creating new list of arguments");
+  
+  pla->first = NULL;
+  pla->curr = pla->first;
+  pla->last = pla->first;
   pla->n_of_args = 0;
+
   #ifdef DEBUG_LEVEL
   pla->level = level;
   #endif // DEBUG_LEVEL
+  
   return pla;
 }
 
 int list_of_arguments_add(list_of_arguments_t *pla, argument_t* parg){
   list_of_arguments_element_t *plae = malloc(sizeof(list_of_arguments_element_t));
-  if(plae == NULL) return -1;
+  if(plae == NULL) PERROR_MALLOC("list_of_arguments_add()  - adding new argument to list of arguments");
 
+  #ifdef DEBUG_LEVEL
   parg->level = pla->level;
+  #endif // DEBUG_LEVEL
 
   //linking elements of list
   if(pla->first == NULL){

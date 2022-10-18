@@ -35,14 +35,18 @@ typedef struct argument_tt {
   int level;    /**< nesting level */
 
   struct expression1_tt *calc;  /**< Pointer to next level expression1_t.
-                                      which calculates value of this argument.
-                                      if NULL val is specified. */
+                                     which calculates value of this argument.
+                                     if NULL val is specified. */
   type_of_value_t val;          /**< value of argument */
   type_of_value_t *pval;        /**< pointer to value of argument */
+
   int i_start;  /**< index of first character of argument's string */
   int i_end;    /**< index of last character of argument's string */
-  type_of_token_t token_type;
+
+  type_of_token_t token_type; /**< for distinguish between digit, operator name, etc */ 
 } argument_t;
+
+
 
 /** element of list of arguments.
 */
@@ -58,21 +62,27 @@ typedef struct list_of_arguments_tt {
   int level;    /**< nesting level */
   #endif//DEBUG_LEVEL
 
-  int n_of_args;
+  int n_of_args;  //TODO: this is right place for that information
   list_of_arguments_element_t* first;    /**< first element of list */
   list_of_arguments_element_t* curr;  /**< currly ponted element of list */
   list_of_arguments_element_t* last;     /**< last alement of list. New element will be added after this element */
 } list_of_arguments_t;
 
 
+
 /** elemental expression (1 level expression)
 */
 typedef struct expression1_tt {
   struct expression1_tt *parent;  /**< poointer to parent expression */
-  argument_t *pIasArg; /**< a pointer to an argument that will contain the value of the expression*/
+  argument_t *pIasArg; /**< a pointer to parent argument that will contain the value of the expression*/
+  
   type_of_value_t (*fn)(argument_t**, int);  /**< pointer to function which calcualtes value of this expression */
-  int n_of_args;   /**< how many arguments funciton has */
+  
+  int n_of_args;   /**< how many arguments funciton has */ //TODO: unneccesary copy of that information (shoud be only in plarg)
+
   list_of_arguments_t* plarg;  /**< list of arguments */
+
+  //TODO: maybe this shoud be in struct
   int i_start; /**< index of beginning of name */
   int i_end;  /**< inde of last character of name */
 } expression1_t;
@@ -92,6 +102,7 @@ int list_of_arguments_add(list_of_arguments_t *pla, argument_t* parg);
   @param pla - pointer to released list
   @return 0 : ok, -1 : erorr
 */
+//int list_of_arguments_destruct(list_of_arguments_t *pla);
 int list_of_arguments_release(list_of_arguments_t *pla);
 
 /** create empty list of arguments
@@ -103,19 +114,19 @@ list_of_arguments_t *list_of_arguments_create(int level);
 list_of_arguments_t *list_of_arguments_create(void);
 #endif // DEBUG_LEVEL
 
-/** return currly pointed element of list.
-  @param pla - pointer ot list of arugments.
+/** return currently pointed element of list.
+  @param pla - pointer to list of arugments.
   @return pointer to currly pointed element of list
 */
 argument_t *list_of_arguments_get(list_of_arguments_t *pla);
 
-/** switch pointer from currly pointed to next element of list.
+/** switch pointer from currently pointed to next element of list.
   @param pla - pointer to list of arguemnts
   @return 0 : ok, 1 : there is no next element, -1 : error
 */
 int list_of_arguments_next(list_of_arguments_t *pla);
 
-/** set currly poined element on first element
+/** set currently poined element on first element
   @param pla - pointer to list of arguemnts
   @return 0 : ok, -1 : error0;
 */

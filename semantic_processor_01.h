@@ -16,7 +16,7 @@ typedef struct function_db_tt {
 
 extern function_db_t function_db[];
 
-void interpret_num(argument_t *parg, char *formula);
-void interpret_op(expression1_t *pex, char* formula);
+void interpret_num(argument_t *parg, const char *formula);
+void interpret_op(expression1_t *pex, const char* formula);
 
 #endif // SEMANTIC_PROCESSOR_01_H_INCLUDED

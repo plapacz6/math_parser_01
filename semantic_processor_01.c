@@ -36,7 +36,7 @@ function_db_t function_db [FUNCTION_DB_SIZE] = {
  * @param parg 
  * @param formula 
  */
-void interpret_num(argument_t *parg, char *formula){
+void interpret_num(argument_t *parg, const char *formula){
   double value_d = 0;
   char buf[MAX_SIZE_OF_DIGIT + 1];
   strncpy(buf, formula + (parg->i_start), parg->i_end - parg->i_start);
@@ -53,7 +53,7 @@ void interpret_num(argument_t *parg, char *formula){
  * @param pex 
  * @param formula 
  */
-void interpret_op(expression1_t *pex, char* formula){
+void interpret_op(expression1_t *pex, const char* formula){
   char buf[MAX_SIZE_OF_DIGIT + 1];
   strncpy(buf, formula + (pex->i_start), pex->i_end - pex->i_start);
   buf[pex->i_end - pex->i_start] = 0;
