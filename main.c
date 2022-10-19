@@ -86,7 +86,7 @@ int main(int argc, char** argv)
         val = read_e(pexpr, test_expr[j].f, 0);
 
         test_result.count++;
-        if( val == test_expr[j].val) {
+        if( test_expr[j].test_result ==  (val == test_expr[j].val) ) {
           test_result.pass++;
         }
         else{
