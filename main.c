@@ -7,6 +7,7 @@
 #include "parser_debug.h"
 #include "read_and_calculate.h"
 #include "semantic_processor_01.h"
+#include "error_handling.h"
 
 #include "tests_db.h"
 
@@ -81,9 +82,11 @@ int main(int argc, char** argv)
       for(; j < tests_number; j++){
       
         printf("%s : %d\n", "TEST", j);
+        formula = test_expr[j].f;
         
-        expression1_t *pexpr = parse_expr4(test_expr[j].f);
-        val = read_e(pexpr, test_expr[j].f, 0);
+        expression1_t *pexpr = parse_expr4(formula);
+        //PRINT_INFO_1(formula);  
+        val = read_e(pexpr, formula, 0);
 
         test_result.count++;
         if( test_expr[j].test_result ==  (val == test_expr[j].val) ) {

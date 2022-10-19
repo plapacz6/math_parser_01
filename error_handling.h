@@ -9,9 +9,9 @@
 #define INFO_HANDLING_H
 /* separate into a separate file   info_handling.h  */
 #ifdef PRINT_INFO
-#define PRINT_INFO_1(X) { fprintf(stdin, "%s\n", X);}
+  #define PRINT_INFO_1(X) { printf("%s\n", X);}
 #else
-#define PRINT_INFO_1(X) ;
+  #define PRINT_INFO_1(X) ;
 #endif //PRINT_INFO
 #endif //INFO_HANDLING_H
 
