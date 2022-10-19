@@ -29,7 +29,7 @@ typedef struct parser04_state_tt{
   const char *formula;  /**<  stringZ  analyzed formula */  
   int i_start;    /**<  index of currently analyzed part of formula */
   int i_end;
-  int i_curr;     /**<   ???  */  
+  int i_curr;     /**<  index of currently read character of formula  */  
 
   syntax_state_t curr_state;    /**<  state machine   current state */
   bool syntax_error;            /**< flag if error occured */
@@ -128,10 +128,9 @@ void o_arg(){
   assert(ptr_parser_state->curr_arg == ptr_parser_state->curr_al->curr->el);
   ptr_parser_state->curr_arg_closed = false;
 }
-void c_arg(){
-  //ptr_parser_state->curr_arg->i_start = ptr_parser_state->i_start;
+void c_arg(){  
   ptr_parser_state->curr_arg->i_end = ptr_parser_state->i_curr;;
-  //ptr_parser_state->i_start = ptr_parser_state->i_end = 0;
+
   if(ptr_parser_state->curr_arg->token_type == tot_digit){
     interpret_num(ptr_parser_state->curr_arg, ptr_parser_state->formula);
   }
