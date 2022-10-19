@@ -5,6 +5,7 @@
 #include <string.h>
 #include "model_of_expresson.h"
 #include "read_and_calculate.h"
+#include "error_handling.h"
 
 typedef struct wyrazzenie_i_wartosc_tt {
   void *fn; //wskaznik do funkcji realizujacej operator
@@ -105,22 +106,24 @@ type_of_value_t read_e(expression1_t *pe, char* formula,  int indent){
     strncpy(n, formula + (pe->i_start), pe->i_end - pe->i_start);
     n[pe->i_end - pe->i_start] = 0;
     make_indent(s, indent);
-    //printf("%spIasArg->level: %i  %s\n", s, pe->pIasArg->level, n);
+    //printf("%sptr_this_as_arg_in_parent->level: %i  %s\n", s, pe->ptr_this_as_arg_in_parent->level, n);
   #endif // DEBUG_PRINT_READ
 
   if(pe->plarg != NULL) {
-    argument_t** tbl_args = malloc(sizeof(argument_t*) * pe->n_of_args); //pe->n_of_args is generated in perse_express4()  //TODO: IT SHOUD BE IN ONE PLACE ONLY FOR EXPAMPLE IN pe->la REDUNDANCY INTORUCES ERROS
-    if(tbl_args == NULL) exit(1);
-    read_la(pe->plarg, formula, indent + 1, tbl_args, pe->n_of_args);
-    pe->pIasArg->val = (pe->fn)(tbl_args, pe->n_of_args);
+    argument_t** tbl_args = malloc(sizeof(argument_t*) * pe->plarg->n_of_args); //pe->n_of_args is generated in perse_express4()  //TODO: IT SHOUD BE IN ONE PLACE ONLY FOR EXPAMPLE IN pe->la REDUNDANCY INTORUCES ERROS
+    if(tbl_args == NULL) PERROR_MALLOC("read_e() - can't create temporary tbl_args");
+    
+    read_la(pe->plarg, formula, indent + 1, tbl_args, pe->plarg->n_of_args);
+    pe->ptr_this_as_arg_in_parent->val = (pe->fn)(tbl_args, pe->plarg->n_of_args);
+    
     free(tbl_args);
   }
   
   #ifdef DEBUG_PRINT_READ
-    printf("%spIasArg->level: %i  %s == %f\n", s, pe->pIasArg->level, n, (double) (pe->pIasArg->val));
+    printf("%sptr_this_as_arg_in_parent->level: %i  %s == %f\n", s, pe->ptr_this_as_arg_in_parent->level, n, (double) (pe->ptr_this_as_arg_in_parent->val));
   #endif // DEBUG_PRINT_READ
 
-  return pe->pIasArg->val;
+  return pe->ptr_this_as_arg_in_parent->val;
 }
 
 
@@ -138,7 +141,7 @@ void read_la(list_of_arguments_t *pla, char* formula, int indent, argument_t** t
   int i = 0;
   list_of_arguments_rewind(pla);
   do {
-    assert(i < n_of_args);    //na_of_arg is generated in perse_express4()
+    assert(i < n_of_args);    //na_of_arg is generated in parse_express4()
     if(list_of_arguments_get(pla) != NULL){
       tbl_args[i] = list_of_arguments_get(pla);
       read_a(list_of_arguments_get(pla), formula, indent);

@@ -41,6 +41,7 @@ int main(int argc, char** argv)
     else {
       #ifdef TEST_AUTO_ON
       test = AUTO_TEST_ON;    
+      //test = AUTO_TEST_OFF;    
       #else
       test = AUTO_TEST_OFF;    
       #endif
@@ -63,7 +64,7 @@ int main(int argc, char** argv)
       puts("---------------------");
       display_e(pexpr, 0);
 
-      val = read_e(pexpr, expression_test, 0);
+      val = read_e(pexpr, formula, 0);
       printf("wartosc == %f\n", val);
 
       puts("---------------------");
@@ -82,7 +83,7 @@ int main(int argc, char** argv)
         printf("%s : %d\n", "TEST", j);
         
         expression1_t *pexpr = parse_expr4(test_expr[j].f);
-        val = read_e(pexpr, test_expr[j].a, 0);
+        val = read_e(pexpr, test_expr[j].f, 0);
 
         test_result.count++;
         if( val == test_expr[j].val) {

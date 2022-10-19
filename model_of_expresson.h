@@ -5,12 +5,11 @@
 author: plapacz6@gmail.com; date: 2021-02-03 ;version: 0.1
 */
 
-
 //#ifndef COMPLEX_EXPRESSION_H_INCLUDED
 //#define COMPLEX_EXPRESSION_H_INCLUDED
 /* author: plapacz6@gmail.com; date: 2020-09-22 ;version: 0.1 */
 /** @file complex_expression.h */
-extern char* expression;  //string of expression
+extern char *expression; //string of expression
 
 /** structure to represent the construction of an expression */
 
@@ -23,69 +22,78 @@ typedef double type_of_value_t;
 //extern expression1_tt;
 //extern list_of_arguments_element_tt;
 
-typedef enum type_of_token_tt {
+typedef enum type_of_token_tt
+{
   tot_digit,
   tot_name,
   tot_symbol,
   tot_name_of_operator
 } type_of_token_t;
 
-typedef struct argument_tt {
 
-  int level;    /**< nesting level */
+typedef struct argument_tt
+{
 
-  struct expression1_tt *calc;  /**< Pointer to next level expression1_t.
+  int level; /**< nesting level */
+
+  struct expression1_tt *calc; /**< Pointer to next level expression1_t.
                                      which calculates value of this argument.
                                      if NULL val is specified. */
-  type_of_value_t val;          /**< value of argument */
-  type_of_value_t *pval;        /**< pointer to value of argument */
+  type_of_value_t val;         /**< value of argument */
+  type_of_value_t *pval;       /**< pointer to value of argument */
 
-  int i_start;  /**< index of first character of argument's string */
-  int i_end;    /**< index of last character of argument's string */
+  int i_start; /**< index of first character of argument's string */
+  int i_end;   /**< index of last character of argument's string */
 
-  type_of_token_t token_type; /**< for distinguish between digit, operator name, etc */ 
+  type_of_token_t token_type; /**< for distinguish between digit, operator name, etc */
 } argument_t;
 
 
 
 /** element of list of arguments.
 */
-typedef struct list_of_arguments_element_tt {
+typedef struct list_of_arguments_element_tt
+{
   argument_t *el;
-  struct list_of_arguments_element_tt* next;
+  struct list_of_arguments_element_tt *next;
 } list_of_arguments_element_t;
+
+
 
 /** list of arguments
 */
-typedef struct list_of_arguments_tt {
-  #ifdef DEBUG_LEVEL
-  int level;    /**< nesting level */
-  #endif//DEBUG_LEVEL
+typedef struct list_of_arguments_tt
+{
+#ifdef DEBUG_LEVEL
+  int level; /**< nesting level */
+#endif       //DEBUG_LEVEL
 
-  int n_of_args;  //TODO: this is right place for that information
-  list_of_arguments_element_t* first;    /**< first element of list */
-  list_of_arguments_element_t* curr;  /**< currly ponted element of list */
-  list_of_arguments_element_t* last;     /**< last alement of list. New element will be added after this element */
+  int n_of_args;                      //TODO: this is right place for that information
+  list_of_arguments_element_t *first; /**< first element of list */
+  list_of_arguments_element_t *curr;  /**< currly ponted element of list */
+  list_of_arguments_element_t *last;  /**< last alement of list. New element will be added after this element */
 } list_of_arguments_t;
 
 
 
 /** elemental expression (1 level expression)
 */
-typedef struct expression1_tt {
-  struct expression1_tt *parent;  /**< poointer to parent expression */
-  argument_t *pIasArg; /**< a pointer to parent argument that will contain the value of the expression*/
-  
-  type_of_value_t (*fn)(argument_t**, int);  /**< pointer to function which calcualtes value of this expression */
-  
-  int n_of_args;   /**< how many arguments funciton has */ //TODO: unneccesary copy of that information (shoud be only in plarg)
+typedef struct expression1_tt
+{
+  struct expression1_tt *parent;           /**< pointer to parent expression */
+  argument_t *ptr_this_as_arg_in_parent;   /**< pointer to parent's argument that will contain the value of the expression*/
 
-  list_of_arguments_t* plarg;  /**< list of arguments */
+  type_of_value_t (*fn)(argument_t **, int); /**< pointer to function which calcualtes value of this expression */
+
+  //int n_of_args;   /**< how many arguments funciton has */ //TODO: unneccesary copy of that information (shoud be only in plarg)
+
+  list_of_arguments_t *plarg; /**< list of arguments */
 
   //TODO: maybe this shoud be in struct
   int i_start; /**< index of beginning of name */
-  int i_end;  /**< inde of last character of name */
+  int i_end;   /**< inde of last character of name */
 } expression1_t;
+
 
 
 /** adds next argument to list of arguemnts.
@@ -95,7 +103,7 @@ typedef struct expression1_tt {
   @param parg - pointer to obiect of type argument_t created and filled manually
   @return 0 : ok, -1 : error
 */
-int list_of_arguments_add(list_of_arguments_t *pla, argument_t* parg);
+int list_of_arguments_add(list_of_arguments_t *pla, argument_t *parg);
 
 /**
   free() all arguments stored on the list, and free() also the list.
@@ -132,8 +140,6 @@ int list_of_arguments_next(list_of_arguments_t *pla);
 */
 int list_of_arguments_rewind(list_of_arguments_t *pla);
 
-
-
 /** using the above structures to read and parse an expression */
 
 /** reads character string representing expression in polish notation.
@@ -169,12 +175,10 @@ int list_of_arguments_rewind(list_of_arguments_t *pla);
 type_of_value_t expression_calculate(expression1_t *pexpr);
 
 //DEBUG
-void print_argument_t(argument_t* pa, char* comment);
-void print_list_of_arguments_t(list_of_arguments_t* pla, char *comment);
+void print_argument_t(argument_t *pa, char *comment);
+void print_list_of_arguments_t(list_of_arguments_t *pla, char *comment);
 void print_expresion1_t(expression1_t *pexpr, char *comment);
 
-
 //#endif // COMPLEX_EXPRESSION_H_INCLUDED
-
 
 #endif // MODEL_OF_EXPRESSON_H_INCLUDED

@@ -37,6 +37,7 @@ typedef struct parser04_state_tt{
   
   int level;  /**<TODO:    DEBUG, NECCESSARY, OR INFO ONLY ??? */
   
+  list_of_arguments_t *first_al; /**<  pointer to first arg list on which expression is mounted in 1st arg */
   expression1_t *curr_op;       /**<   pointer to expression being currenly analyzed */
   list_of_arguments_t *curr_al; /**<   pointer to list of arguments  currently  analyzed expression */
   argument_t *curr_arg;         /**<   pointer to currently reading argument */
@@ -49,13 +50,42 @@ typedef struct parser04_state_tt{
 parser04_state_t parser_state, *ptr_parser_state = &parser_state;
 
 
+/**
+ * @brief free() all created object (expression, armgument, arguments' list)
+ * 
+ */
+void parser04_free(){
+  if(ptr_parser_state->curr_al != NULL){
+    list_of_arguments_release(ptr_parser_state->first_al);
+  }
+}
+void parser04_state_reset(){
+  parser04_state_t* ps = ptr_parser_state;
+  parser04_free();
+  ps->formula = NULL;
+  ps->i_start = 0;
+  ps->i_end = 0;
+  ps->i_curr = 0;
+  ps->curr_state = st3_la;     
+  ps->syntax_error = false;
+  ps->level = 0;  
+  ps->curr_op = NULL;   
+  ps->first_al = NULL;  
+  ps->curr_al = NULL;
+  ps->curr_arg = NULL;
+  ps->curr_arg_closed = NULL;
+  ps->expr_tree_complete = false;
+}
+
+
+
 
 #ifdef DEBUG_PRN
 #define PR_N(P,W,S,E) \
   {char prn_buff[100]; \
   strncpy(prn_buff, W + S, (E - S)); \
   prn_buff[E - S] = 0; \
-  printf("level %d: %s\n", P->curr_op->pIasArg->level, prn_buff);}
+  printf("level %d: %s\n", P->curr_op->ptr_this_as_arg_in_parent->level, prn_buff);}
   //printf("level %d: %s\n", P->level, prn_buff);}
 #else
   #define PR_N(P,W,S,E)
@@ -68,7 +98,7 @@ parser04_state_t parser_state, *ptr_parser_state = &parser_state;
   {char prn_buff[100]; \
   strncpy(prn_buff, W + S, (E - S)); \
   prn_buff[E - S] = 0; \
-  printf("level %d: %s\n", P->curr_op->pIasArg->level, prn_buff);}
+  printf("level %d: %s\n", P->curr_op->ptr_this_as_arg_in_parent->level, prn_buff);}
 
 
 
@@ -82,7 +112,6 @@ void o_s(){
 void c_s(){
   ptr_parser_state->i_end = ptr_parser_state->i_curr;
 }
-
 
 
 
@@ -116,17 +145,31 @@ void s_arg_type(type_of_token_t t){
 
 
 
-
+#ifdef DEBUG_LEVEL
 void o_al(int level){
-/*
-   !!! level is incremented (if neccecary) outside (before call) this function
-*/
-  list_of_arguments_t* new_al = list_of_arguments_create(level);
+#else 
+void o_al(){
+#endif // DEBUG_LEVEL  
+
+  #ifdef DEBUG_LEVEL
+    /*!!! level is incremented (if neccecary) outside (before call) this function*/
+    list_of_arguments_t* new_al = list_of_arguments_create(level);
+  #else 
+    list_of_arguments_t* new_al = list_of_arguments_create();
+  #endif // DEBUG_LEVEL  
   if(new_al == NULL) PERROR_MALLOC("o_al - can't create new arguents list");
 
-  ptr_parser_state->curr_al = new_al;
-  if(level > 0)  {  //TODO:  is level not only for debug purpose ???
-    ptr_parser_state->curr_op->plarg = new_al;
+  new_al->n_of_args = 0;
+  new_al->curr = NULL;
+  new_al->first = NULL;
+  new_al->last = NULL;
+  
+  ptr_parser_state->curr_al = new_al;  
+  if(ptr_parser_state->first_al == NULL)
+    ptr_parser_state->first_al = ptr_parser_state->curr_al;
+
+  if(ptr_parser_state->curr_op != NULL){
+    ptr_parser_state->curr_op->plarg = new_al;  
   }
 }
 void c_al(){
@@ -139,36 +182,46 @@ void c_al(){
 void o_exp(){
   expression1_t *new_op = malloc(sizeof(expression1_t));
   if(new_op == NULL) PERROR_MALLOC("o_exp() - can't open next level expression");
-
+  
+  new_op->plarg = NULL;  
   new_op->parent = ptr_parser_state->curr_op;
   
+  /* expression is created always in place of complex argument on some arguments list */
   assert(ptr_parser_state->curr_arg != NULL);
-  ptr_parser_state->curr_arg->calc = new_op;
-  new_op->pIasArg = ptr_parser_state->curr_arg;
 
+  new_op->ptr_this_as_arg_in_parent = ptr_parser_state->curr_arg;
+  
   new_op->i_start = ptr_parser_state->i_start;
   new_op->i_end = ptr_parser_state->i_end;
   ptr_parser_state->i_start = ptr_parser_state->i_end = 0;
 
-  ptr_parser_state->curr_op = new_op;
-  ptr_parser_state->curr_op->n_of_args = 0; //TODO: n__of_args in one place only
+  ptr_parser_state->curr_op = new_op;  
+  ptr_parser_state->curr_arg->calc = new_op;
 
-  ptr_parser_state->level++; //level++ gdy otwiera sie nawias (level tylko do debugu i analizy)
+  #ifdef DEBUG_LEVEL
+    ptr_parser_state->level++; //level++ gdy otwiera sie nawias (level tylko do debugu i analizy)
+  #endif //DEBUG_LEVEL
 }
 void c_exp(){
-  ptr_parser_state->curr_op->n_of_args = ptr_parser_state->curr_op->plarg->n_of_args; //TODO: n__of_args in one place only
-  interpret_op(ptr_parser_state->curr_op, ptr_parser_state->formula);
-  //znajdz funkcje realizujaca operator (nazwa + liczba arg)
-  //ptr_parser_state->curr_op->fn = funkcja((ptr_parser_state->curr_op->i_start, ptr_parser_state->curr_op->i_end), ptr_parser_state->curr_op->n_of_args)
-  ptr_parser_state->level--; //level-- gdy zamyka sie nawias (level tylko do debugu i analizy)
+
+  interpret_op(ptr_parser_state->curr_op, ptr_parser_state->formula);  
+  
+  #ifdef DEBUG_LEVEL
+    ptr_parser_state->level--; //level-- gdy zamyka sie nawias (level tylko do debugu i analizy)
+  #endif //DEBUG_LEVEL
+
   if(ptr_parser_state->curr_op->parent != NULL){
     ptr_parser_state->curr_op = ptr_parser_state->curr_op->parent;
     ptr_parser_state->curr_al = ptr_parser_state->curr_op->plarg;   //lista parenta juz
     ptr_parser_state->curr_arg = ptr_parser_state->curr_op->plarg->last->el; //ostatni przetwarzany element z tej listy
   }
-  else { //zamykamy pierwszy element ktory nie ma parenta
-    assert(ptr_parser_state->curr_op->pIasArg->level == 0); //1 bo nie mozna nijak dosiegnac 0wej listy arg, na ktorej jest pierwszy operator
-    assert(ptr_parser_state->level == 0);
+  else { //closing first element without parent
+    assert(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level == 0); //1 bo nie mozna nijak dosiegnac 0wej listy arg, na ktorej jest pierwszy operator
+    
+    #ifdef DEBUG_LEVEL
+      assert(ptr_parser_state->level == 0);
+    #endif //DEBUG_LEVEL
+
     ptr_parser_state->expr_tree_complete = true;
   }
   return;
@@ -190,25 +243,28 @@ case '6': case '7': case '8': case '9'
 
 
 expression1_t *parse_expr4(const char *formula){
-
+  parser04_state_reset();
   ptr_parser_state->formula = formula;
-  ptr_parser_state->level = 0;
-  ptr_parser_state->curr_op = NULL;
-  ptr_parser_state->curr_al = NULL;
-  ptr_parser_state->curr_arg = NULL;
+  // ptr_parser_state->level = 0;
+  // ptr_parser_state->curr_op = NULL;
+  // ptr_parser_state->curr_al = NULL;
+  // ptr_parser_state->curr_arg = NULL;
 
-  syntax_state_t sstate = st3_la;
+  syntax_state_t sstate = ptr_parser_state->curr_state; // st3_la;
   char c;
   int i;
   PRINT_INFO_1(formula);  
 
-
-  o_al(0);
+  #ifdef DEBUG_LEVEL
+    o_al(0);
+  #else
+    o_al();
+  #endif // DEBUG_LEVEL
 
 
   //PR(ptr_parser_state->level)
   for(i = 0; (c = formula[i]) != '\0'; i++){
-    //PR(ptr_parser_state->curr_op->pIasArg->level);
+    //PR(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level);
     //R_2(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
     //PR(ptr_parser_state->level);
     //PR(c)
@@ -291,7 +347,11 @@ expression1_t *parse_expr4(const char *formula){
             s_arg_type(tot_name_of_operator);
             o_exp();
 
-            o_al((ptr_parser_state->curr_op->pIasArg->level + 1));
+            #ifdef DEBUG_LEVEL
+              o_al((ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level + 1));
+            #else
+              o_al();
+            #endif // DEBUG_LEVEL
 
             PR_N(ptr_parser_state, formula, ptr_parser_state->curr_op->i_start, ptr_parser_state->curr_op->i_end);
 

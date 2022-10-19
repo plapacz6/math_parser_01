@@ -62,7 +62,7 @@ void interpret_op(expression1_t *pex, const char* formula){
   int i;
   for(i = 0; i < FUNCTION_DB_SIZE; i++){
     if( !strncmp(function_db[i].name, buf, strlen(buf)) &&
-        function_db[i].n_of_args == pex->n_of_args){
+        function_db[i].n_of_args == pex->plarg->n_of_args){
       //znaleziona
       pex->fn = function_db[i].pf;
       break;

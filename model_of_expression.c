@@ -64,9 +64,12 @@ int list_of_arguments_release(list_of_arguments_t *pla){
   //usun wszystkie obiekty wskazwywane przez elementy listy i same ementy listy
   while(pla->first != NULL){
     pla->curr = pla->first;
-    pla->first = pla->first->next;
+    pla->first = pla->first->next;  
     assert(pla->curr->el != NULL);
-    free(pla->curr->el);
+    if(pla->curr->el->calc != NULL) {
+      list_of_arguments_release(pla->curr->el->calc->plarg);
+      free(pla->curr->el);
+    }
     free(pla->curr);
   };
   //usun sama liste

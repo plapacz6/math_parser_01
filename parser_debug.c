@@ -49,10 +49,10 @@ void display_e(expression1_t *pe, int indent){
   printf("%s           %p: E\n", s, pe);
   printf("%sE_name: %s\n", s, n);
   printf("%sparent: %p\n", s, pe->parent);
-  printf("%spIsArg: %p\n", s, pe->pIasArg);
-  printf("%spIasArg->level: %i\n", s, pe->pIasArg->level);
+  printf("%spIsArg: %p\n", s, pe->ptr_this_as_arg_in_parent);
+  printf("%sptr_this_as_arg_in_parent->level: %i\n", s, pe->ptr_this_as_arg_in_parent->level);
   printf("%sfn: %p\n", s, pe->fn);
-  printf("%snum_of_arg: %i\n", s, pe->n_of_args);
+  printf("%snum_of_arg: %i\n", s, pe->plarg->n_of_args);
   printf("%splarg: %p\n", s, pe->plarg);
   printf("%si_start: %i\n", s, pe->i_start);
   printf("%si_end: %i\n", s, pe->i_end);
@@ -112,9 +112,9 @@ void print_expresion1_t(expression1_t *pe, char *comment){
   printf("operator__: adres: %p\n, %s\n", pe, comment);
   if(pe != NULL) {
     printf("parent: %p\n", pe->parent);  /**< poointer to parent expression */
-    printf("adres gdzie wartosc tego wyrzenia zapisac: %p\n", pe->pIasArg); /**< pointer to place where value of expression will be placed */
+    printf("adres gdzie wartosc tego wyrzenia zapisac: %p\n", pe->ptr_this_as_arg_in_parent); /**< pointer to place where value of expression will be placed */
     printf("pointer funkcji realizujacej: %p: \n", pe->fn);  /**< pointer to function which calcualtes value of this expression */
-    printf("liczba argumentow: %i\n", pe->n_of_args);   /**< how many arguments funciton has */
+    printf("liczba argumentow: %i\n", pe->plarg->n_of_args);   /**< how many arguments funciton has */
     printf("adres listy argumentow: %p\n", pe->plarg);  /**< list of arguments */
   }
   printf("%s\n", "####################################################");
