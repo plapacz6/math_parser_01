@@ -58,20 +58,16 @@ void interpret_op(expression1_t *pex, const char* formula){
   strncpy(buf, formula + (pex->i_start), pex->i_end - pex->i_start);
   buf[pex->i_end - pex->i_start] = 0;
 
-  //znajdz funkcje o tej nazwie w tabeli znanych funkcji
+  //find function with specified name in database of known functions
   int i;
   for(i = 0; i < FUNCTION_DB_SIZE; i++){
     if( !strncmp(function_db[i].name, buf, strlen(buf)) &&
         function_db[i].n_of_args == pex->plarg->n_of_args){
-      //znaleziona
+      //found
       pex->fn = function_db[i].pf;
       break;
     }
   }
-  //utworzenie tablicy arg dla wywolania tej funkcji
-  //utworz dynamiczn atablice o rozmiarze n_of_args
-  //przeszuaj liste arg i zapisz  argument_t*
-  //(lepiej w pzzyszlosci od razu pval zapisywac)
 }
 
 

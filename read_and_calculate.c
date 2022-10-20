@@ -71,10 +71,10 @@ type_of_value_t read_a(argument_t *pa, char *formula, int indent){
   type_of_value_t val;
 
   #ifdef DEBUG_PRINT_READ
-  char s[INDENT_MAX];  
-  make_indent(s, indent);
-  printf("%slevel: %i, val: %f\n",s, pa->level, pa->val);
-  printf("%s_____________________A|\n", s);
+    char s[INDENT_MAX];  
+    make_indent(s, indent);
+    printf("%slevel: %i, val: %f\n",s, pa->level, pa->val);
+    printf("%s_____________________A|\n", s);
   #endif // DEBUG_PRINT_READ
 
   if(pa->calc != NULL) {

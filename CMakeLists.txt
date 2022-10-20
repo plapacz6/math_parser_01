@@ -17,11 +17,19 @@ add_executable(math_parser /
   semantic_processor_01.c /
   tests_db.c /
   )
+#parse_expr_01.c  #parse_expr_02.c #parse_expr_03.c /
+  
+target_compile_optIons(math_parser PRIVATE  -g -Wall /
+-DEBUG_PRINT_READ / #print some info in calulating phase
+#-DDEBUG -DDEBUG_ /
+-DDEBUG_LEVEL / #TODO: 
+#-DDEBUG2 /
+#-DDEBUG1 /
+#-DDEBUG3 /
+#-DDEBUG_PRINT_READ /
+-DPRINT_INFO / #print some info at parser phase
+)
 
-  #parse_expr_01.c  #parse_expr_02.c #parse_expr_03.c \
-
-target_compile_optIons(math_parser PRIVATE  -g -Wall -DDEBUG -DDEBUG_ -DDEBUG_LEVEL -DDEBUG2 -DDEBUG1 -DDEBUG3 -DDEBUG_PRINT_READ -DPRINT_INFO)
-#target_compile_optIons(math_parser PRIVATE  -g -Wall -DDEBUG -DDEBUG_ -DDEBUG2 -DDEBUG1 -DDEBUG3 -DDEBUG_PRINT_READ -DPRINT_INFO)
 target_include_directories(math_parser PUBLIC ${PROJECT_SRC_DIR})
 
 
