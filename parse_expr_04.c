@@ -1,6 +1,15 @@
 /*
-author: plapacz6@gmail.com; date: 2020- ;version: 0.1
+Copyright 2020-2024 plapacz6@gmail.com
+
+This file is part of math_parser_01.
+
+math_parser_01 is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+math_parser_01 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -15,34 +24,34 @@ author: plapacz6@gmail.com; date: 2020- ;version: 0.1
 
 /* -------------- logic of syntax ----------------- */
 typedef enum syntax_state_tt {
-  //st1_begining,
-  st2_name,
-  st3_la,
-  st4_digit,
-  st5_sp_afer_sp,
-  st6_end,
+    //st1_begining,
+    st2_name,
+    st3_la,
+    st4_digit,
+    st5_sp_afer_sp,
+    st6_end,
 } syntax_state_t;
 
 
 
-typedef struct parser04_state_tt{
-  const char *formula;  /**<  stringZ  analyzed formula */  
-  int i_start;    /**<  index of currently analyzed part of formula */
-  int i_end;
-  int i_curr;     /**<  index of currently read character of formula  */  
+typedef struct parser04_state_tt {
+    const char *formula;  /**<  stringZ  analyzed formula */
+    int i_start;    /**<  index of currently analyzed part of formula */
+    int i_end;
+    int i_curr;     /**<  index of currently read character of formula  */
 
-  syntax_state_t curr_state;    /**<  state machine   current state */
-  bool syntax_error;            /**< flag if error occured */
-/* -------------- logic of expression tree ----------------- */
-  
-  int level;  /**<TODO:    DEBUG, NECCESSARY, OR INFO ONLY ??? */
-  
-  list_of_arguments_t *first_al; /**<  pointer to first arg list on which expression is mounted in 1st arg */
-  expression1_t *curr_op;       /**<   pointer to expression being currenly analyzed */
-  list_of_arguments_t *curr_al; /**<   pointer to list of arguments  currently  analyzed expression */
-  argument_t *curr_arg;         /**<   pointer to currently reading argument */
-  bool curr_arg_closed;         /**<   flag if analyze of currently reading argument is done */
-  bool expr_tree_complete;      /**<   tree growing from current expression is already processed */
+    syntax_state_t curr_state;    /**<  state machine   current state */
+    bool syntax_error;            /**< flag if error occured */
+    /* -------------- logic of expression tree ----------------- */
+
+    int level;  /**<TODO:    DEBUG, NECCESSARY, OR INFO ONLY ??? */
+
+    list_of_arguments_t *first_al; /**<  pointer to first arg list on which expression is mounted in 1st arg */
+    expression1_t *curr_op;       /**<   pointer to expression being currenly analyzed */
+    list_of_arguments_t *curr_al; /**<   pointer to list of arguments  currently  analyzed expression */
+    argument_t *curr_arg;         /**<   pointer to currently reading argument */
+    bool curr_arg_closed;         /**<   flag if analyze of currently reading argument is done */
+    bool expr_tree_complete;      /**<   tree growing from current expression is already processed */
 } parser04_state_t;
 
 
@@ -52,29 +61,29 @@ parser04_state_t parser_state, *ptr_parser_state = &parser_state;
 
 /**
  * @brief free() all created object (expression, armgument, arguments' list)
- * 
+ *
  */
-void parser04_free(){
-  if(ptr_parser_state->curr_al != NULL){
-    list_of_arguments_release(ptr_parser_state->first_al);
-  }
+void parser04_free() {
+    if(ptr_parser_state->curr_al != NULL) {
+        list_of_arguments_release(ptr_parser_state->first_al);
+    }
 }
-void parser04_state_reset(){
-  parser04_state_t* ps = ptr_parser_state;
-  parser04_free();
-  ps->formula = NULL;
-  ps->i_start = 0;
-  ps->i_end = 0;
-  ps->i_curr = 0;
-  ps->curr_state = st3_la;     
-  ps->syntax_error = false;
-  ps->level = 0;  
-  ps->curr_op = NULL;   
-  ps->first_al = NULL;  
-  ps->curr_al = NULL;
-  ps->curr_arg = NULL;
-  ps->curr_arg_closed = NULL;
-  ps->expr_tree_complete = false;
+void parser04_state_reset() {
+    parser04_state_t* ps = ptr_parser_state;
+    parser04_free();
+    ps->formula = NULL;
+    ps->i_start = 0;
+    ps->i_end = 0;
+    ps->i_curr = 0;
+    ps->curr_state = st3_la;
+    ps->syntax_error = false;
+    ps->level = 0;
+    ps->curr_op = NULL;
+    ps->first_al = NULL;
+    ps->curr_al = NULL;
+    ps->curr_arg = NULL;
+    ps->curr_arg_closed = NULL;
+    ps->expr_tree_complete = false;
 }
 
 
@@ -86,9 +95,9 @@ void parser04_state_reset(){
   strncpy(prn_buff, W + S, (E - S)); \
   prn_buff[E - S] = 0; \
   printf("level %d: %s\n", P->curr_op->ptr_this_as_arg_in_parent->level, prn_buff);}
-  //printf("level %d: %s\n", P->level, prn_buff);}
+//printf("level %d: %s\n", P->level, prn_buff);}
 #else
-  #define PR_N(P,W,S,E)
+#define PR_N(P,W,S,E)
 #endif // DEBUG_PRN
 
 
@@ -104,126 +113,126 @@ void parser04_state_reset(){
 
 /**
  * @brief open/close of analyze current letter of formula
- * 
+ *
  */
-void o_s(){
-  ptr_parser_state->i_start = ptr_parser_state->i_curr;
+void o_s() {
+    ptr_parser_state->i_start = ptr_parser_state->i_curr;
 }
-void c_s(){
-  ptr_parser_state->i_end = ptr_parser_state->i_curr;
+void c_s() {
+    ptr_parser_state->i_end = ptr_parser_state->i_curr;
 }
 
 
 
-void o_arg(){
-  argument_t *arg = malloc(sizeof(argument_t));
-  if(arg == NULL) PERROR_MALLOC("o_arg() - can't open new argument");
+void o_arg() {
+    argument_t *arg = malloc(sizeof(argument_t));
+    if(arg == NULL) PERROR_MALLOC("o_arg() - can't open new argument");
 
-  arg->pval = &arg->val;
-  arg->i_start = ptr_parser_state->i_curr;
-  list_of_arguments_add(ptr_parser_state->curr_al, arg);
+    arg->pval = &arg->val;
+    arg->i_start = ptr_parser_state->i_curr;
+    list_of_arguments_add(ptr_parser_state->curr_al, arg);
 
-  ptr_parser_state->curr_arg = arg;
-  assert(ptr_parser_state->curr_arg == ptr_parser_state->curr_al->last->el);
-  assert(ptr_parser_state->curr_arg == ptr_parser_state->curr_al->curr->el);
-  ptr_parser_state->curr_arg_closed = false;
+    ptr_parser_state->curr_arg = arg;
+    assert(ptr_parser_state->curr_arg == ptr_parser_state->curr_al->last->el);
+    assert(ptr_parser_state->curr_arg == ptr_parser_state->curr_al->curr->el);
+    ptr_parser_state->curr_arg_closed = false;
 }
-void c_arg(){  
-  ptr_parser_state->curr_arg->i_end = ptr_parser_state->i_curr;;
+void c_arg() {
+    ptr_parser_state->curr_arg->i_end = ptr_parser_state->i_curr;;
 
-  if(ptr_parser_state->curr_arg->token_type == tot_digit){
-    interpret_num(ptr_parser_state->curr_arg, ptr_parser_state->formula);
-  }
-  ptr_parser_state->curr_arg_closed = true;
-  return;
+    if(ptr_parser_state->curr_arg->token_type == tot_digit) {
+        interpret_num(ptr_parser_state->curr_arg, ptr_parser_state->formula);
+    }
+    ptr_parser_state->curr_arg_closed = true;
+    return;
 }
-void s_arg_type(type_of_token_t t){
-  assert(ptr_parser_state->curr_arg != NULL);
-  ptr_parser_state->curr_arg->token_type = t;
+void s_arg_type(type_of_token_t t) {
+    assert(ptr_parser_state->curr_arg != NULL);
+    ptr_parser_state->curr_arg->token_type = t;
 }
 
 
 
 #ifdef DEBUG_LEVEL
-void o_al(int level){
-#else 
-void o_al(){
+void o_al(int level) {
+#else
+void o_al() {
 #endif // DEBUG_LEVEL  
 
-  #ifdef DEBUG_LEVEL
+#ifdef DEBUG_LEVEL
     /*!!! level is incremented (if neccecary) outside (before call) this function*/
     list_of_arguments_t* new_al = list_of_arguments_create(level);
-  #else 
+#else
     list_of_arguments_t* new_al = list_of_arguments_create();
-  #endif // DEBUG_LEVEL  
-  if(new_al == NULL) PERROR_MALLOC("o_al - can't create new arguents list");
+#endif // DEBUG_LEVEL  
+    if(new_al == NULL) PERROR_MALLOC("o_al - can't create new arguents list");
 
-  new_al->n_of_args = 0;
-  new_al->curr = NULL;
-  new_al->first = NULL;
-  new_al->last = NULL;
-  
-  ptr_parser_state->curr_al = new_al;  
-  if(ptr_parser_state->first_al == NULL)
-    ptr_parser_state->first_al = ptr_parser_state->curr_al;
+    new_al->n_of_args = 0;
+    new_al->curr = NULL;
+    new_al->first = NULL;
+    new_al->last = NULL;
 
-  if(ptr_parser_state->curr_op != NULL){
-    ptr_parser_state->curr_op->plarg = new_al;  
-  }
+    ptr_parser_state->curr_al = new_al;
+    if(ptr_parser_state->first_al == NULL)
+        ptr_parser_state->first_al = ptr_parser_state->curr_al;
+
+    if(ptr_parser_state->curr_op != NULL) {
+        ptr_parser_state->curr_op->plarg = new_al;
+    }
 }
-void c_al(){
-  return;
+void c_al() {
+    return;
 }
 
 
 
 
-void o_exp(){
-  expression1_t *new_op = malloc(sizeof(expression1_t));
-  if(new_op == NULL) PERROR_MALLOC("o_exp() - can't open next level expression");
-  
-  new_op->plarg = NULL;  
-  new_op->parent = ptr_parser_state->curr_op;
-  
-  /* expression is created always in place of complex argument on some arguments list */
-  assert(ptr_parser_state->curr_arg != NULL);
+void o_exp() {
+    expression1_t *new_op = malloc(sizeof(expression1_t));
+    if(new_op == NULL) PERROR_MALLOC("o_exp() - can't open next level expression");
 
-  new_op->ptr_this_as_arg_in_parent = ptr_parser_state->curr_arg;
-  
-  new_op->i_start = ptr_parser_state->i_start;
-  new_op->i_end = ptr_parser_state->i_end;
-  ptr_parser_state->i_start = ptr_parser_state->i_end = 0;
+    new_op->plarg = NULL;
+    new_op->parent = ptr_parser_state->curr_op;
 
-  ptr_parser_state->curr_op = new_op;  
-  ptr_parser_state->curr_arg->calc = new_op;
+    /* expression is created always in place of complex argument on some arguments list */
+    assert(ptr_parser_state->curr_arg != NULL);
 
-  #ifdef DEBUG_LEVEL
+    new_op->ptr_this_as_arg_in_parent = ptr_parser_state->curr_arg;
+
+    new_op->i_start = ptr_parser_state->i_start;
+    new_op->i_end = ptr_parser_state->i_end;
+    ptr_parser_state->i_start = ptr_parser_state->i_end = 0;
+
+    ptr_parser_state->curr_op = new_op;
+    ptr_parser_state->curr_arg->calc = new_op;
+
+#ifdef DEBUG_LEVEL
     ptr_parser_state->level++; //level++ gdy otwiera sie nawias (level tylko do debugu i analizy)
-  #endif //DEBUG_LEVEL
+#endif //DEBUG_LEVEL
 }
-void c_exp(){
+void c_exp() {
 
-  interpret_op(ptr_parser_state->curr_op, ptr_parser_state->formula);  
-  
-  #ifdef DEBUG_LEVEL
+    interpret_op(ptr_parser_state->curr_op, ptr_parser_state->formula);
+
+#ifdef DEBUG_LEVEL
     ptr_parser_state->level--; //level-- gdy zamyka sie nawias (level tylko do debugu i analizy)
-  #endif //DEBUG_LEVEL
+#endif //DEBUG_LEVEL
 
-  if(ptr_parser_state->curr_op->parent != NULL){
-    ptr_parser_state->curr_op = ptr_parser_state->curr_op->parent;
-    ptr_parser_state->curr_al = ptr_parser_state->curr_op->plarg;   //lista parenta juz
-    ptr_parser_state->curr_arg = ptr_parser_state->curr_op->plarg->last->el; //ostatni przetwarzany element z tej listy
-  }
-  else { //closing first element without parent
-    assert(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level == 0); //1 bo nie mozna nijak dosiegnac 0wej listy arg, na ktorej jest pierwszy operator
-    
-    #ifdef DEBUG_LEVEL
-      assert(ptr_parser_state->level == 0);
-    #endif //DEBUG_LEVEL
+    if(ptr_parser_state->curr_op->parent != NULL) {
+        ptr_parser_state->curr_op = ptr_parser_state->curr_op->parent;
+        ptr_parser_state->curr_al = ptr_parser_state->curr_op->plarg;   //lista parenta juz
+        ptr_parser_state->curr_arg = ptr_parser_state->curr_op->plarg->last->el; //ostatni przetwarzany element z tej listy
+    }
+    else { //closing first element without parent
+        assert(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level == 0); //1 bo nie mozna nijak dosiegnac 0wej listy arg, na ktorej jest pierwszy operator
 
-    ptr_parser_state->expr_tree_complete = true;
-  }
-  return;
+#ifdef DEBUG_LEVEL
+        assert(ptr_parser_state->level == 0);
+#endif //DEBUG_LEVEL
+
+        ptr_parser_state->expr_tree_complete = true;
+    }
+    return;
 }
 
 
@@ -241,178 +250,181 @@ case '6': case '7': case '8': case '9'
 
 
 
-expression1_t *parse_expr4(const char *formula){
-  parser04_state_reset();
-  ptr_parser_state->formula = formula;
-  // ptr_parser_state->level = 0;
-  // ptr_parser_state->curr_op = NULL;
-  // ptr_parser_state->curr_al = NULL;
-  // ptr_parser_state->curr_arg = NULL;
+expression1_t *parse_expr4(const char *formula) {
+    parser04_state_reset();
+    ptr_parser_state->formula = formula;
+    // ptr_parser_state->level = 0;
+    // ptr_parser_state->curr_op = NULL;
+    // ptr_parser_state->curr_al = NULL;
+    // ptr_parser_state->curr_arg = NULL;
 
-  syntax_state_t sstate = ptr_parser_state->curr_state; // st3_la;
-  char c;
-  int i;
-  PRINT_INFO_1(formula);  
+    syntax_state_t sstate = ptr_parser_state->curr_state; // st3_la;
+    char c;
+    int i;
+    PRINT_INFO_1(formula);
 
-  #ifdef DEBUG_LEVEL
+#ifdef DEBUG_LEVEL
     o_al(0);
-  #else
+#else
     o_al();
-  #endif // DEBUG_LEVEL
+#endif // DEBUG_LEVEL
 
 
-  //PR(ptr_parser_state->level)
-  for(i = 0; (c = formula[i]) != '\0'; i++){
-    //PR(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level);
-    //R_2(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-    //PR(ptr_parser_state->level);
-    //PR(c)
-    //PR(sstate)
-    ptr_parser_state->curr_state = sstate;
-    ptr_parser_state->i_curr = i;
-    switch(sstate){
+    //PR(ptr_parser_state->level)
+    for(i = 0; (c = formula[i]) != '\0'; i++) {
+        //PR(ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level);
+        //R_2(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+        //PR(ptr_parser_state->level);
+        //PR(c)
+        //PR(sstate)
+        ptr_parser_state->curr_state = sstate;
+        ptr_parser_state->i_curr = i;
+        switch(sstate) {
 
-      case st3_la:
-        switch(c){
-          case ' ':
-            break;
-          case_09: case '+': case '-':
-            o_s();
-            o_arg();
-            s_arg_type(tot_digit);
-            sstate = st4_digit;
-            break;
-          case_AZ:
-            o_s();
-            o_arg();
-            s_arg_type(tot_name);
-            sstate = st2_name;
-            break;
-          case ',':
-            //c_arg(); //nie ma czego zamykac, bo otwierane tylko w st3_la
-            break;
-          case ')':
-            if(ptr_parser_state->curr_arg_closed != false){
-              c_arg();
+        case st3_la:
+            switch(c) {
+            case ' ':
+                break;
+case_09:
+            case '+':
+            case '-':
+                o_s();
+                o_arg();
+                s_arg_type(tot_digit);
+                sstate = st4_digit;
+                break;
+case_AZ:
+                o_s();
+                o_arg();
+                s_arg_type(tot_name);
+                sstate = st2_name;
+                break;
+            case ',':
+                //c_arg(); //nie ma czego zamykac, bo otwierane tylko w st3_la
+                break;
+            case ')':
+                if(ptr_parser_state->curr_arg_closed != false) {
+                    c_arg();
+                }
+                c_al();
+                c_exp();
+                c_arg();
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+                if(ptr_parser_state->expr_tree_complete == true) {
+                    return ptr_parser_state->curr_op;
+                    sstate = st6_end;
+                }
+                break;
             }
-            c_al();
-            c_exp();
-            c_arg();
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-            if(ptr_parser_state->expr_tree_complete == true){
-              return ptr_parser_state->curr_op;
-              sstate = st6_end;
+            break;
+
+        case st2_name:
+            switch(c) {
+case_AZ:
+                break;
+            case ',':
+                c_s();
+                s_arg_type(tot_symbol);
+                c_arg();
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+                sstate = st3_la;
+                break;
+            case ')':  //CHECK
+                c_s();
+                s_arg_type(tot_symbol);
+                //if(ptr_parser_state->curr_arg_closed != false){
+                c_arg();
+                //}
+                c_al();
+                c_exp(); //zmiana ptr_parser_state->curr_arg
+                c_arg(); //IasArg
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+
+                if(ptr_parser_state->expr_tree_complete == true) {
+                    return ptr_parser_state->curr_op;
+                    sstate = st6_end;
+                }
+                sstate = st3_la;
+                break;
+            case ' ':
+                c_s();
+                s_arg_type(tot_symbol);
+                c_arg();
+                sstate = st5_sp_afer_sp;
+                break;
+            case '(':
+                c_s();
+                s_arg_type(tot_name_of_operator);
+                o_exp();
+
+#ifdef DEBUG_LEVEL
+                o_al((ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level + 1));
+#else
+                o_al();
+#endif // DEBUG_LEVEL
+
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_op->i_start, ptr_parser_state->curr_op->i_end);
+
+                sstate = st3_la;
+                break;
             }
             break;
-        }
-        break;
 
-      case st2_name:
-        switch(c){
-          case_AZ:
-            break;
-          case ',':
-            c_s();
-            s_arg_type(tot_symbol);
-            c_arg();
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-            sstate = st3_la;
-            break;
-          case ')':  //CHECK
-            c_s();
-            s_arg_type(tot_symbol);
-            //if(ptr_parser_state->curr_arg_closed != false){
-              c_arg();
-            //}
-            c_al();
-            c_exp(); //zmiana ptr_parser_state->curr_arg
-            c_arg(); //IasArg
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+        case st4_digit:
+            switch(c) {
+case_09:
+            case '.':
+                break;
+            case ' ':
+                c_s();
+                c_arg();
+                sstate = st5_sp_afer_sp;
+                break;
+            case ',':
+                c_s();
+                c_arg();
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+                sstate = st3_la;
+                break;
+            case ')':
+                c_s();
+                s_arg_type(tot_digit);
+                //if(ptr_parser_state->curr_arg_closed != false){
+                c_arg();
+                //}
+                c_al();
+                c_exp(); //zmiana ptr_parser_state->curr_arg
+                c_arg(); //IasArg
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
 
-            if(ptr_parser_state->expr_tree_complete == true){
-              return ptr_parser_state->curr_op;
-              sstate = st6_end;
+                if(ptr_parser_state->expr_tree_complete == true) {
+                    return ptr_parser_state->curr_op;
+                    sstate = st6_end;
+                }
+
+                sstate = st3_la;
+                break;
             }
-            sstate = st3_la;
             break;
-          case ' ':
-            c_s();
-            s_arg_type(tot_symbol);
-            c_arg();
-            sstate = st5_sp_afer_sp;
-            break;
-          case '(':
-            c_s();
-            s_arg_type(tot_name_of_operator);
-            o_exp();
-
-            #ifdef DEBUG_LEVEL
-              o_al((ptr_parser_state->curr_op->ptr_this_as_arg_in_parent->level + 1));
-            #else
-              o_al();
-            #endif // DEBUG_LEVEL
-
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_op->i_start, ptr_parser_state->curr_op->i_end);
-
-            sstate = st3_la;
-            break;
-        }
-        break;
-
-      case st4_digit:
-        switch(c){
-          case_09: case '.':
-            break;
-          case ' ':
-            c_s();
-            c_arg();
-            sstate = st5_sp_afer_sp;
-            break;
-          case ',':
-            c_s();
-            c_arg();
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-            sstate = st3_la;
-            break;
-          case ')':
-            c_s();
-            s_arg_type(tot_digit);
-            //if(ptr_parser_state->curr_arg_closed != false){
-              c_arg();
-            //}
-            c_al();
-            c_exp(); //zmiana ptr_parser_state->curr_arg
-            c_arg(); //IasArg
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-
-            if(ptr_parser_state->expr_tree_complete == true){
-              return ptr_parser_state->curr_op;
-              sstate = st6_end;
+        case st5_sp_afer_sp:
+            switch(c) {
+            case ' ':
+                break;
+            case ',':
+                PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
+                sstate = st3_la;
+                break;
+            default:
+                exit(2);  //syntax error
+                break;
             }
+            break;
+        case st6_end:  //poniewaz kzda petla to kolejny znak formuly to nie mozna tak konczyc, trzeba od razu
+            if(ptr_parser_state->expr_tree_complete) return ptr_parser_state->curr_op;
+            break;
+        }//case
+    }//for
 
-            sstate = st3_la;
-            break;
-        }
-        break;
-      case st5_sp_afer_sp:
-        switch(c){
-          case ' ':
-            break;
-          case ',':
-            PR_N(ptr_parser_state, formula, ptr_parser_state->curr_arg->i_start, ptr_parser_state->curr_arg->i_end);
-            sstate = st3_la;
-            break;
-          default:
-            exit(2);  //syntax error
-            break;
-        }
-        break;
-      case st6_end:  //poniewaz kzda petla to kolejny znak formuly to nie mozna tak konczyc, trzeba od razu
-        if(ptr_parser_state->expr_tree_complete) return ptr_parser_state->curr_op;
-        break;
-    }//case
-  }//for
-
-  //return ptr_parser_state->curr_op;
-  return NULL;
+    //return ptr_parser_state->curr_op;
+    return NULL;
 }

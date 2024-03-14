@@ -1,3 +1,15 @@
+/*
+Copyright 2020-2024 plapacz6@gmail.com
+
+This file is part of math_parser_01.
+
+math_parser_01 is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+math_parser_01 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #ifdef MODEL_OF_EXPRESSON_2
 #ifndef COMPLEX_EXPRESSION_H_INCLUDED
 #define COMPLEX_EXPRESSION_H_INCLUDED
@@ -18,50 +30,50 @@ typedef double type_of_value_t;
 //extern list_of_arguments_element_tt;
 
 typedef enum type_of_token_tt {
-  tot_digit,
-  tot_name,
-  tot_symbol,
-  tot_name_of_operator
+    tot_digit,
+    tot_name,
+    tot_symbol,
+    tot_name_of_operator
 } type_of_token_t;
 
 typedef struct argument_tt {
-  struct expression1_tt *calc;  /**< Pointer to next level expression1_t.
+    struct expression1_tt *calc;  /**< Pointer to next level expression1_t.
                                       which calculates value of this argument.
                                       if NULL val is specified. */
-  type_of_value_t val;          /**< value of argument */
-  type_of_value_t *pval;        /**< pointer to value of argument */
-  int i_start;  /**< index of first character of argument's string */
-  int i_end;    /**< index of last character of argument's string */
-  type_of_token_t token_type;
+    type_of_value_t val;          /**< value of argument */
+    type_of_value_t *pval;        /**< pointer to value of argument */
+    int i_start;  /**< index of first character of argument's string */
+    int i_end;    /**< index of last character of argument's string */
+    type_of_token_t token_type;
 } argument_t;
 void print_argument_t(argument_t* pa, char* comment);
 /** element of list of arguments.
 */
 typedef struct list_of_arguments_element_tt {
-  argument_t *el;
-  struct list_of_arguments_element_tt* next;
+    argument_t *el;
+    struct list_of_arguments_element_tt* next;
 } list_of_arguments_element_t;
 
 /** list of arguments
 */
 typedef struct list_of_arguments_tt {
-  int n_of_args;
-  list_of_arguments_element_t* first;    /**< first element of list */
-  list_of_arguments_element_t* curr;  /**< currly ponted element of list */
-  list_of_arguments_element_t* last;     /**< last alement of list. New element will be added after this element */
+    int n_of_args;
+    list_of_arguments_element_t* first;    /**< first element of list */
+    list_of_arguments_element_t* curr;  /**< currly ponted element of list */
+    list_of_arguments_element_t* last;     /**< last alement of list. New element will be added after this element */
 } list_of_arguments_t;
 void print_list_of_arguments_t(list_of_arguments_t* pla, char *comment);
 
 /** elemental expression (1 level expression)
 */
 typedef struct expression1_tt {
-  struct expression1_tt *parent;  /**< poointer to parent expression */
-  argument_t *pval; /**< pointer to place where value of expression will be placed */
-  void *fn;  /**< pointer to function which calcualtes value of this expression */
-  int n_of_args;   /**< how many arguments funciton has */
-  list_of_arguments_t* plarg;  /**< list of arguments */
-  int i_start; /**< index of beginning of name */
-  int i_end;  /**< inde of last character of name */
+    struct expression1_tt *parent;  /**< poointer to parent expression */
+    argument_t *pval; /**< pointer to place where value of expression will be placed */
+    void *fn;  /**< pointer to function which calcualtes value of this expression */
+    int n_of_args;   /**< how many arguments funciton has */
+    list_of_arguments_t* plarg;  /**< list of arguments */
+    int i_start; /**< index of beginning of name */
+    int i_end;  /**< inde of last character of name */
 } expression1_t;
 void print_expresion1_t(expression1_t *pexpr, char *comment);
 
