@@ -10,6 +10,7 @@ math_parser_01 is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU Lesser General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
